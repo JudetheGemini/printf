@@ -1,5 +1,4 @@
 #include "main.h"
-#include <stdarg.h>
 /**
  * _printf - print arguments to output stream and return number of arguments
  * @format: character string
@@ -7,22 +6,55 @@
  */
 int _printf(const char *format, ...)
 {
-	va_list str;
-	char c, *s;
-	const char specifiers[] = "cs%";
+	va_list argPtr;
+	int state, size;
+	char ch;
+	const char *str;
 
-	va_copy(format, specifiers);
-	va_start(str, format);
+	state = NORMAL_STATE;
+
+	va_start(argPtr, format);
 
 	while (*format)
-		switch (*format++)
+	{
+		if (state == NORMAL_STATE)
 		{
-		case 'c':
-			c = (char) va_arg(str, int);
-			return (write(1, &c, 1));
-		case 's':
-			s = va_arg(str, char *);
-			return (write(1, &s, 1));
+			if (*format == '%')
+			{
+				state = SPECIFIER;
+			}
+			else
+				putchar(*format);
 		}
-	va_end(str);
+		else if (state == SPECIFIER)
+		{
+			switch (*format)
+			{
+			case 'c':
+			{
+				ch = (va_arg(argPtr, int));
+				putchar(ch);
+			}
+				break;
+			case 's':
+			{
+				str = (va_arg(argPtr, const char *));
+				while (*str)
+				{
+					putchar(*str++);
+				}
+				break;
+			case '%':
+			{
+				putchar('%');
+				break;
+			}
+			}
+			}
+		}
+		format++;
+	}
+	size = (strlen(format) - 1);
+	va_end(argPtr);
+	return (size);
 }
