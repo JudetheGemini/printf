@@ -1,60 +1,24 @@
 #include "main.h"
+
 /**
- * _printf - print arguments to output stream and return number of arguments
- * @format: character string
- * Return: number of arguments entered
+ * _printf - function that prints characters to standard output
+ * @format: a character string
+ *
+ * Return:  the number of characters printed
  */
 int _printf(const char *format, ...)
 {
-	va_list argPtr;
-	int state, size;
-	char ch;
-	const char *str;
+	print_specifier argument[] = {
+		{"c", _print_char},
+		{"s", _print_string},
+		{"%", _print_percent},
+		{NULL, NULL}
+	};
+	va_list ap;
+	int num = 0;
 
-	state = NORMAL_STATE;
-
-	va_start(argPtr, format);
-
-	while (*format)
-	{
-		if (state == NORMAL_STATE)
-		{
-			if (*format == '%')
-			{
-				state = SPECIFIER;
-			}
-			else
-				putchar(*format);
-		}
-		else if (state == SPECIFIER)
-		{
-			switch (*format)
-			{
-			case 'c':
-			{
-				ch = (va_arg(argPtr, int));
-				putchar(ch);
-			}
-				break;
-			case 's':
-			{
-				str = (va_arg(argPtr, const char *));
-				while (*str)
-				{
-					putchar(*str++);
-				}
-				break;
-			case '%':
-			{
-				putchar('%');
-				break;
-			}
-			}
-			}
-		}
-		format++;
-	}
-	size = (strlen(format) - 1);
-	va_end(argPtr);
-	return (size);
+	va_start(ap, format);
+	num = get_print(format, argument, ap);
+	va_end(ap);
+	return (num);
 }
