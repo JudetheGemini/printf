@@ -30,8 +30,8 @@ int _print_rot13(va_list ap);
 int _print_unsigned(va_list ap);
 int _print_octal(va_list ap);
 int _print_binary(va_list ap);
-int _print_hex_l(va_list ap);
-int _print_hex_u(va_list ap);
+int _print_hex(va_list ap);
+int _print_hex_cap(va_list ap);
 char *convert(unsigned int num, int base);
 int get_print(const char *format, print_specifier argument[], va_list ap);
 #endif
